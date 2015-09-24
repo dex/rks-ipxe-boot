@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const DefaultPort = 8080
+
 func usage() {
 	fmt.Printf(`Usage: %s <kernel> <initrd> [<port>] [<cmdline>...]
 This utility will host the <kernel> and <initrd> at port <port> for iPXE boot
@@ -31,9 +33,8 @@ SCG-100.
 }
 
 func is_url(path string) bool {
-	schemes := []string{"http", "tftp", "https"}
-	for _, s := range schemes {
-		prefix := fmt.Sprintf("%s://", s)
+	for _, scheme := range []string{"http", "tftp", "https"} {
+		prefix := fmt.Sprintf("%s://", scheme)
 		if strings.HasPrefix(path, prefix) {
 			return true
 		}
@@ -72,7 +73,7 @@ boot
 
 func main() {
 	argc := len(os.Args)
-	port := 8080
+	port := DefaultPort
 	cmd := []string{"stage2=initrd:"}
 
 	if argc < 3 {
